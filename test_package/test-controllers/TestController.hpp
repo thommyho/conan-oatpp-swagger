@@ -109,18 +109,21 @@ private:
 
   };
 
+private:
+
+  static oatpp::Type* createType() {
+    oatpp::Type::Info info;
+    info.interpretationMap = {{"test", new Inter()}};
+    return new oatpp::Type(CLASS_ID, info);
+  }
+
 public:
 
   static const oatpp::ClassId CLASS_ID;
 
   static oatpp::Type *getType() {
-    static oatpp::Type type(
-      CLASS_ID, nullptr, nullptr,
-      {
-        {"test", new Inter()}
-      }
-    );
-    return &type;
+    static oatpp::Type* type = createType();
+    return type;
   }
 
 };
@@ -249,6 +252,7 @@ public:
     info->summary = "Delete User by userId";
     info->addResponse<String>(Status::CODE_200, "text/plain");
     info->addResponse<String>(Status::CODE_404, "text/plain");
+    info->addResponse<String>(Status::CODE_500, "text/plain");
   }
   ENDPOINT("DELETE", "demo/api/users/{userId}", deleteUser,
            PATH(Int32, userId)) {

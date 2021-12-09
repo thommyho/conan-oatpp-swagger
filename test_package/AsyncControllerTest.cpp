@@ -63,10 +63,10 @@ void AsyncControllerTest::onRun() {
   SwaggerComponent swaggerComponent;
 
   // Create controllers and generate api docs
-  auto docEndpoints = oatpp::swagger::AsyncController::Endpoints::createShared();
+  oatpp::web::server::api::Endpoints docEndpoints;
 
   auto controller = TestAsyncController::createShared(objectMapper);
-  docEndpoints->pushBackAll(controller->getEndpoints());
+  docEndpoints.append(controller->getEndpoints());
 
   auto swaggerController = oatpp::swagger::AsyncController::createShared(docEndpoints);
 

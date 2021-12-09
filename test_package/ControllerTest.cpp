@@ -74,17 +74,17 @@ void ControllerTest::onRun() {
   SwaggerComponent swaggerComponent;
 
   // Create controllers and generate api docs
-  auto docEndpoints = oatpp::swagger::Controller::Endpoints::createShared();
+  oatpp::web::server::api::Endpoints docEndpoints;
 
   auto controller = TestController::createShared(objectMapper);
-  docEndpoints->pushBackAll(controller->getEndpoints());
+  docEndpoints.append(controller->getEndpoints());
 
   auto swaggerController = oatpp::swagger::Controller::createShared(docEndpoints);
 
   { // OAS-Doc
 
     // Get api json from swaggerController
-    oatpp::data::stream::ChunkedBuffer stream;
+    oatpp::data::stream::BufferOutputStream stream;
     stream.setOutputStreamIOMode(oatpp::data::stream::IOMode::BLOCKING);
 
     auto response = swaggerController->api();
@@ -108,7 +108,7 @@ void ControllerTest::onRun() {
 
   { // index.html test
     // Get index.html from swaggerController
-    oatpp::data::stream::ChunkedBuffer stream;
+    oatpp::data::stream::BufferOutputStream stream;
     stream.setOutputStreamIOMode(oatpp::data::stream::IOMode::BLOCKING);
 
     auto response = swaggerController->getUIRoot();
